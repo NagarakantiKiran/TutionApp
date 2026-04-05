@@ -1,1241 +1,557 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Class Timer — Tuition Teacher App</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+  <meta name="theme-color" content="#6750A4"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <title>ScholarPro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --cream: #FDF6EE;
-      --cream-dark: #F5EAD8;
-      --navy: #2C3E6B;
-      --navy-light: #3D5491;
-      --coral: #D85A30;
-      --coral-light: #F0997B;
-      --coral-pale: #FAECE7;
-      --coral-border: #F5C4B3;
-      --teal: #1D9E75;
-      --teal-light: #E1F5EE;
-      --teal-border: #9FE1CB;
-      --amber: #BA7517;
-      --amber-light: #FAEEDA;
-      --text-primary: #1a1a2e;
-      --text-secondary: #6b6b8a;
-      --text-muted: #a0a0b8;
-      --white: #fff;
-      --border: #e8ddd0;
-      --shadow-sm: 0 1px 3px rgba(44,62,107,0.08);
-      --shadow-md: 0 4px 16px rgba(44,62,107,0.12);
-      --shadow-lg: 0 8px 32px rgba(44,62,107,0.18);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+      --p:#6750A4; --op:#fff; --pc:#EADDFF; --opc:#21005D;
+      --sc:#625B71; --scc:#E8DEF8; --oscc:#1D192B;
+      --tc:#006A6A; --tcc:#9CF0EE; --otcc:#002020;
+      --surf:#FFFBFE; --sv:#E7E0EC; --os:#1C1B1F; --osv:#49454F;
+      --out:#79747E; --outv:#CAC4D0;
+      --err:#B3261E; --errc:#F9DEDC;
+      --s1:#F4EFFE; --s2:#EFE9FA; --s3:#E9E3F5;
+      --sh1:0 1px 2px rgba(0,0,0,.3),0 1px 3px 1px rgba(0,0,0,.15);
+      --sh2:0 1px 2px rgba(0,0,0,.3),0 2px 6px 2px rgba(0,0,0,.15);
+      --sh3:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3);
+      --fn:'Nunito',sans-serif; --fm:'Roboto Mono',monospace;
+      --nh:76px; --th:60px;
     }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
-      color: var(--text-primary);
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    html,body{height:100%;overflow:hidden;font-family:var(--fn);background:var(--surf);color:var(--os);-webkit-font-smoothing:antialiased;}
+    #app{height:100%;display:flex;flex-direction:column;overflow:hidden;}
 
     /* TOP BAR */
-    .topbar {
-      background: var(--navy);
-      padding: 14px 16px 12px;
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .topbar-left { display: flex; flex-direction: column; }
-    .topbar-title {
-      font-family: 'Lora', serif;
-      font-size: 18px; font-weight: 700;
-      color: var(--white); letter-spacing: -0.3px;
-    }
-    .topbar-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 1px; }
-    .topbar-add {
-      background: var(--coral);
-      color: var(--white);
-      border: none; border-radius: 99px;
-      padding: 9px 18px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 500;
-      cursor: pointer;
-      display: flex; align-items: center; gap: 5px;
-      transition: background 0.15s;
-    }
-    .topbar-add:hover { background: var(--coral-light); }
-    .topbar-add:active { transform: scale(0.97); }
+    .tb{background:var(--s1);height:var(--th);display:flex;align-items:center;padding:0 8px 0 16px;gap:10px;flex-shrink:0;}
+    .tb-logo{width:36px;height:36px;border-radius:12px;background:var(--p);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .tb-logo svg{width:20px;height:20px;fill:#fff;}
+    .tb-title{font-size:20px;font-weight:900;color:var(--os);letter-spacing:-.5px;flex:1;}
+    .tb-clock{display:flex;flex-direction:column;align-items:flex-end;margin-right:4px;}
+    .tb-time{font-family:var(--fm);font-size:17px;font-weight:700;color:var(--p);letter-spacing:-.5px;font-variant-numeric:tabular-nums;}
+    .tb-ampm{font-size:9px;color:var(--osv);font-weight:700;letter-spacing:.5px;}
+    .ib{width:40px;height:40px;border-radius:50%;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+    .ib:hover{background:rgba(103,80,164,.08);}
+    .ib:active{background:rgba(103,80,164,.15);transform:scale(.95);}
+    .ib svg{width:22px;height:22px;fill:var(--osv);}
 
-    .topbar-clock {
-      font-family: 'Lora', serif;
-      font-size: 22px; font-weight: 700;
-      color: var(--white); letter-spacing: -0.5px;
-      font-variant-numeric: tabular-nums;
-    }
-    .topbar-clock-label { font-size: 9px; color: rgba(255,255,255,0.45); text-align: center; letter-spacing: 0.5px; margin-top: 1px; }
-    .settings-btn {
-      background: rgba(255,255,255,0.12); border: none;
-      border-radius: 99px; padding: 7px 13px;
-      font-size: 12px; color: rgba(255,255,255,0.8);
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      margin-right: 6px;
-    }
-    .settings-btn:hover { background: rgba(255,255,255,0.2); }
+    /* SUMMARY */
+    .sumrow{background:var(--s1);padding:0 16px 10px;display:flex;gap:8px;flex-shrink:0;}
+    .sc-chip{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:99px;font-size:12px;font-weight:700;}
+    .sc-chip.tot{background:var(--scc);color:var(--oscc);}
+    .sc-chip.act{background:var(--pc);color:var(--opc);}
+    .sc-chip.don{background:var(--tcc);color:var(--otcc);}
+    .sc-dot{width:6px;height:6px;border-radius:50%;}
 
-    .warn-banner {
-      background: #FAEEDA; border-bottom: 1.5px solid #FAC775;
-      padding: 8px 16px; display: flex; align-items: center; gap: 8px;
-      font-size: 12px; font-weight: 500; color: #633806;
-      animation: slideDown 0.2s ease;
-    }
-    @keyframes slideDown { from { transform:translateY(-8px); opacity:0; } to { transform:none; opacity:1; } }
-    .warn-dot { width: 8px; height: 8px; border-radius: 50%; background: #BA7517; flex-shrink: 0; animation: pulse 1s ease-in-out infinite; }
+    /* WARN */
+    .warn{background:#FFF8E7;border-bottom:1.5px solid #FFD54F;padding:9px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;animation:sd .2s ease;}
+    @keyframes sd{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+    .warn-ic{width:22px;height:22px;border-radius:50%;background:#FFA000;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .warn-ic svg{width:13px;height:13px;fill:#fff;}
+    .warn-tx{font-size:12px;font-weight:700;color:#5D4037;flex:1;}
+    .warn-cl{background:none;border:none;font-size:16px;color:#9E8C6A;cursor:pointer;padding:2px 6px;}
 
-    /* STATS BAR */
-    .stats-bar {
-      background: var(--navy-light);
-      padding: 8px 16px;
-      display: flex; gap: 16px;
-    }
-    .stat { display: flex; flex-direction: column; align-items: center; }
-    .stat-num { font-size: 16px; font-weight: 500; color: var(--white); font-variant-numeric: tabular-nums; }
-    .stat-label { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-divider { width: 1px; background: rgba(255,255,255,0.15); }
+    /* SCROLL */
+    .scr{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 16px calc(var(--nh)+16px);display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch;}
+    .scr::-webkit-scrollbar{display:none;}
 
-    /* STUDENT GRID */
-    .student-list { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    /* EMPTY */
+    .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:60px 20px;text-align:center;}
+    .empty-il{width:80px;height:80px;border-radius:24px;background:var(--pc);display:flex;align-items:center;justify-content:center;}
+    .empty-il svg{width:44px;height:44px;fill:var(--p);}
+    .empty-t{font-size:22px;font-weight:900;color:var(--os);}
+    .empty-s{font-size:14px;color:var(--osv);line-height:1.5;max-width:240px;}
+    .empty-b{background:var(--p);color:#fff;border:none;border-radius:99px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fn);box-shadow:var(--sh1);}
 
-    .empty-state {
-      text-align: center; padding: 60px 20px;
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
-    }
-    .empty-icon {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: var(--coral-pale); border: 2px solid var(--coral-border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-    }
-    .empty-title { font-family: 'Lora', serif; font-size: 18px; font-weight: 600; color: var(--navy); }
-    .empty-sub { font-size: 13px; color: var(--text-secondary); max-width: 220px; line-height: 1.5; }
-    .empty-cta {
-      margin-top: 8px; background: var(--navy);
-      color: var(--white); border: none; border-radius: 99px;
-      padding: 10px 22px; font-size: 14px; font-weight: 500;
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-    }
+    /* CARD */
+    .card{background:var(--s2);border-radius:20px;padding:16px;transition:background .2s,box-shadow .2s;animation:ci .25s cubic-bezier(.34,1.1,.64,1);position:relative;overflow:hidden;}
+    @keyframes ci{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+    .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:0 2px 2px 0;background:transparent;transition:background .2s;}
+    .card.running{background:var(--s1);box-shadow:var(--sh2);}
+    .card.running::before{background:var(--p);}
+    .card.expired{background:#FFF8F7;box-shadow:0 2px 8px rgba(179,38,30,.15);}
+    .card.expired::before{background:var(--err);}
+    .card.paused::before{background:#F59E0B;}
 
-    /* STUDENT CARD */
-    .student-card {
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      box-shadow: var(--shadow-sm);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      animation: cardIn 0.25s ease;
-    }
-    @keyframes cardIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-    .student-card.running { border-color: var(--navy); box-shadow: var(--shadow-md); }
-    .student-card.expired { border-color: var(--coral); box-shadow: 0 4px 16px rgba(216,90,48,0.15); }
-    .student-card.paused { border-color: var(--amber); }
+    .ch{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .av{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;flex-shrink:0;}
+    .ci{flex:1;min-width:0;}
+    .cn{font-size:15px;font-weight:900;color:var(--os);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .cm{font-size:12px;color:var(--osv);margin-top:1px;}
+    .st-chip{font-size:11px;font-weight:700;padding:4px 11px;border-radius:99px;flex-shrink:0;}
+    .st-r{background:var(--pc);color:var(--opc);}
+    .st-i{background:var(--sv);color:var(--osv);}
+    .st-p{background:#FFF3E0;color:#E65100;}
+    .st-e{background:var(--errc);color:var(--err);}
 
-    .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .avatar {
-      width: 38px; height: 38px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Lora', serif;
-      font-size: 13px; font-weight: 700; flex-shrink: 0;
-    }
-    .student-info { flex: 1; min-width: 0; }
-    .student-name {
-      font-family: 'Lora', serif;
-      font-size: 14px; font-weight: 600;
-      color: var(--navy); white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis;
-    }
-    .student-meta { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
-    .card-delete {
-      background: none; border: none;
-      color: var(--text-muted); cursor: pointer;
-      padding: 4px; font-size: 16px; border-radius: 4px;
-      transition: color 0.15s;
-      flex-shrink: 0;
-    }
-    .card-delete:hover { color: var(--coral); }
+    .tr{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+    .ts{font-size:10px;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--p);color:#fff;flex-shrink:0;}
+    .tn{font-size:13px;font-weight:700;color:var(--os);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tn.ad{color:var(--tc);}
 
-    .current-task-row {
-      display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
-    }
-    .task-step {
-      font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 99px;
-      background: var(--navy); color: var(--white); flex-shrink: 0;
-    }
-    .task-name {
-      font-size: 12px; color: var(--navy);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      font-weight: 500;
-    }
-    .task-name.done-all { color: var(--teal); }
+    .tcr{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+    .td{font-family:var(--fm);font-size:38px;font-weight:700;color:var(--os);letter-spacing:-2px;font-variant-numeric:tabular-nums;min-width:116px;transition:color .3s;}
+    .td.running{color:var(--p);}
+    .td.expired{color:var(--err);animation:tp 1s ease-in-out infinite;}
+    .td.paused{color:#F59E0B;}
+    .td.idle{color:var(--outv);}
+    @keyframes tp{0%,100%{opacity:1}50%{opacity:.45}}
 
-    .timer-row { display: flex; align-items: center; gap: 8px; }
-    .timer-display {
-      font-family: 'Lora', serif;
-      font-size: 32px; font-weight: 700;
-      color: var(--navy);
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -1px;
-      min-width: 100px;
-      transition: color 0.3s;
-    }
-    .timer-display.running { color: var(--navy); }
-    .timer-display.expired { color: var(--coral); }
-    .timer-display.paused { color: var(--amber); }
-    .timer-display.idle { color: var(--text-muted); }
+    .cg{display:flex;gap:6px;margin-left:auto;align-items:center;}
+    .mb{height:38px;border-radius:99px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fn);padding:0 18px;display:flex;align-items:center;gap:6px;transition:box-shadow .15s,transform .1s;}
+    .mb:active{transform:scale(.96);}
+    .mb svg{width:16px;height:16px;fill:currentColor;flex-shrink:0;}
+    .mb.fil{background:var(--p);color:#fff;box-shadow:var(--sh1);}
+    .mb.ton{background:var(--scc);color:var(--oscc);}
+    .mb.out{background:none;color:var(--p);border:1.5px solid var(--outv);}
+    .mb.ico{padding:0;width:38px;justify-content:center;}
 
-    .ctrl-group { display: flex; gap: 6px; margin-left: auto; }
-    .ctrl-btn {
-      border: 1.5px solid var(--border);
-      background: var(--white); border-radius: 99px;
-      padding: 6px 14px; font-size: 12px; font-weight: 500;
-      cursor: pointer; color: var(--text-primary);
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.15s;
-    }
-    .ctrl-btn:active { transform: scale(0.96); }
-    .ctrl-btn.start { background: var(--navy); color: var(--white); border-color: var(--navy); }
-    .ctrl-btn.pause { background: var(--amber-light); color: var(--amber); border-color: #FAC775; }
-    .ctrl-btn.resume { background: var(--teal-light); color: var(--teal); border-color: var(--teal-border); }
-    .ctrl-btn.reset { background: var(--coral-pale); color: var(--coral); border-color: var(--coral-border); }
+    .pg{height:4px;background:var(--outv);border-radius:99px;overflow:hidden;margin-bottom:8px;}
+    .pf{height:4px;border-radius:99px;background:var(--p);transition:width 1s linear,background .3s;}
+    .pf.exp{background:var(--err);}
+    .pf.pau{background:#F59E0B;}
 
-    .progress-wrap { margin-top: 10px; }
-    .progress-bg {
-      height: 4px; background: var(--cream-dark);
-      border-radius: 99px; overflow: hidden;
-    }
-    .progress-fill {
-      height: 4px; border-radius: 99px;
-      background: var(--navy);
-      transition: width 1s linear, background 0.3s;
-    }
-    .progress-fill.expired { background: var(--coral); }
-    .progress-fill.paused { background: var(--amber); }
+    .pills{display:flex;gap:4px;flex-wrap:wrap;}
+    .pill{font-size:10px;padding:3px 9px;border-radius:99px;background:var(--sv);color:var(--osv);font-weight:600;}
+    .pill.cur{background:var(--pc);color:var(--opc);}
+    .pill.dn{text-decoration:line-through;opacity:.4;}
 
-    .task-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
-    .task-pill {
-      font-size: 10px; padding: 2px 8px; border-radius: 99px;
-      border: 1px solid var(--border); color: var(--text-muted);
-      background: var(--cream);
-      transition: all 0.2s;
-    }
-    .task-pill.active {
-      background: var(--coral-pale); color: var(--coral);
-      border-color: var(--coral-border); font-weight: 500;
-    }
-    .task-pill.done { text-decoration: line-through; opacity: 0.4; }
+    .cf{margin-top:10px;padding-top:10px;border-top:1px solid var(--outv);display:flex;align-items:center;gap:8px;}
+    .si{display:flex;gap:2px;}
+    .s{font-size:16px;cursor:pointer;background:none;border:none;padding:1px;color:var(--outv);transition:color .1s;}
+    .s.l{color:#F59E0B;}
+    .np{flex:1;font-size:11px;color:var(--osv);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic;min-width:0;}
+    .np.e{color:var(--outv);font-style:normal;}
+    .nb{height:32px;padding:0 12px;border-radius:99px;border:1.5px solid var(--outv);background:none;font-size:11px;font-weight:700;color:var(--p);cursor:pointer;font-family:var(--fn);white-space:nowrap;flex-shrink:0;}
 
-    .notes-row {
-      font-size: 11px; color: var(--text-secondary);
-      margin-top: 8px; padding-top: 8px;
-      border-top: 1px dashed var(--border);
-      display: flex; gap: 5px; align-items: flex-start;
-    }
-    .notes-icon { font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+    .delbtn{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+    .delbtn:hover{background:rgba(179,38,30,.1);}
+    .delbtn svg{width:16px;height:16px;fill:var(--osv);}
 
-    /* BOTTOM SHEET MODAL */
-    .overlay {
-      position: fixed; inset: 0;
-      background: rgba(10,10,30,0.5);
-      z-index: 200;
-      display: flex; align-items: flex-end; justify-content: center;
-      animation: fadeIn 0.15s ease;
-    }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-    .sheet {
-      background: var(--white);
-      border-radius: 24px 24px 0 0;
-      padding: 16px 20px 36px;
-      width: 100%; max-width: 520px;
-      max-height: 92vh; overflow-y: auto;
-      animation: slideUp 0.22s ease;
-    }
-    @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:none; opacity:1; } }
-    .sheet-handle {
-      width: 36px; height: 4px; border-radius: 99px;
-      background: var(--border); margin: 0 auto 16px;
-    }
-    .sheet-title {
-      font-family: 'Lora', serif;
-      font-size: 18px; font-weight: 700;
-      color: var(--navy); margin-bottom: 18px;
-    }
+    /* BOTTOM NAV */
+    .bnav{position:fixed;bottom:0;left:0;right:0;height:var(--nh);background:var(--s2);border-top:1px solid var(--outv);display:flex;align-items:flex-start;justify-content:space-around;padding-top:10px;z-index:50;}
+    .ni{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;cursor:pointer;}
+    .nind{height:32px;border-radius:99px;display:flex;align-items:center;justify-content:center;min-width:64px;transition:background .2s;}
+    .nind svg{width:22px;height:22px;fill:var(--osv);}
+    .ni.on .nind{background:var(--scc);}
+    .ni.on .nind svg{fill:var(--oscc);}
+    .nl{font-size:12px;font-weight:700;color:var(--osv);}
+    .ni.on .nl{color:var(--oscc);}
 
-    .field-group { margin-bottom: 14px; }
-    .field-label {
-      font-size: 11px; font-weight: 500; color: var(--text-secondary);
-      text-transform: uppercase; letter-spacing: 0.5px;
-      margin-bottom: 5px; display: block;
-    }
-    input[type=text], input[type=number], textarea, select {
-      width: 100%; padding: 11px 13px; font-size: 14px;
-      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-      background: var(--cream); color: var(--text-primary);
-      font-family: 'DM Sans', sans-serif;
-      outline: none; transition: border-color 0.15s;
-    }
-    input:focus, textarea:focus { border-color: var(--navy); background: var(--white); }
-    textarea { min-height: 64px; resize: vertical; }
+    /* FAB */
+    .fab{position:fixed;right:16px;bottom:calc(var(--nh)+16px);width:56px;height:56px;border-radius:16px;background:var(--pc);border:none;cursor:pointer;z-index:60;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh3);transition:box-shadow .2s,transform .15s;}
+    .fab:active{transform:scale(.93);box-shadow:var(--sh1);}
+    .fab svg{width:26px;height:26px;fill:var(--opc);}
 
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    /* SCRIM + SHEET */
+    .scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;animation:sc .2s ease;}
+    @keyframes sc{from{opacity:0}to{opacity:1}}
+    .bsh{position:fixed;bottom:0;left:0;right:0;background:var(--s1);border-radius:28px 28px 0 0;z-index:101;max-height:92vh;overflow-y:auto;padding:0 0 36px;animation:su .28s cubic-bezier(.34,1.1,.64,1);}
+    @keyframes su{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+    .sdrag{width:32px;height:4px;border-radius:99px;background:var(--outv);margin:12px auto 20px;}
+    .stitle{font-size:18px;font-weight:900;color:var(--os);margin:0 24px 20px;}
 
-    .presets { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-    .preset {
-      background: var(--cream); border: 1.5px solid var(--border);
-      border-radius: 99px; padding: 6px 14px; font-size: 13px;
-      font-weight: 500; cursor: pointer; color: var(--text-secondary);
-      font-family: 'DM Sans', sans-serif; transition: all 0.15s;
-    }
-    .preset.on { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .ff{margin:0 24px 14px;}
+    .fl{font-size:11px;font-weight:800;color:var(--osv);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px;}
+    .fi{width:100%;padding:12px 14px;background:var(--sv);border:none;border-radius:12px 12px 0 0;border-bottom:2px solid var(--out);font-size:15px;font-family:var(--fn);color:var(--os);outline:none;transition:border-color .15s,background .15s;}
+    .fi:focus{border-color:var(--p);background:var(--scc);}
+    .fta{min-height:72px;resize:vertical;}
+    .2c{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 24px 14px;}
 
-    .task-editor { display: flex; flex-direction: column; gap: 8px; }
-    .task-row { display: flex; gap: 8px; align-items: center; }
-    .task-row input { flex: 1; }
-    .task-row-num {
-      width: 22px; height: 22px; border-radius: 50%;
-      background: var(--cream-dark); color: var(--text-secondary);
-      font-size: 11px; font-weight: 500; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .rm-task {
-      background: none; border: none; color: var(--text-muted);
-      font-size: 18px; cursor: pointer; padding: 2px 4px;
-      border-radius: 4px; transition: color 0.15s; line-height: 1;
-    }
-    .rm-task:hover { color: var(--coral); }
-    .add-task {
-      border: 1.5px dashed var(--border); background: none;
-      border-radius: var(--radius-sm); padding: 9px;
-      font-size: 13px; color: var(--text-secondary);
-      cursor: pointer; width: 100%; font-family: 'DM Sans', sans-serif;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .add-task:hover { border-color: var(--navy); color: var(--navy); }
+    .tpre{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+    .tc{padding:7px 16px;border-radius:99px;font-size:13px;font-weight:700;border:1.5px solid var(--outv);background:none;color:var(--osv);cursor:pointer;font-family:var(--fn);transition:all .15s;}
+    .tc.sel{background:var(--p);color:#fff;border-color:var(--p);}
 
-    .sheet-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .btn-cancel {
-      flex: 1; padding: 13px; border-radius: 99px;
-      border: 1.5px solid var(--border); background: var(--cream);
-      font-size: 14px; font-weight: 500; cursor: pointer;
-      font-family: 'DM Sans', sans-serif; color: var(--text-secondary);
-    }
-    .btn-save {
-      flex: 2; padding: 13px; border-radius: 99px;
-      border: none; background: var(--navy);
-      font-size: 14px; font-weight: 500; cursor: pointer;
-      font-family: 'DM Sans', sans-serif; color: var(--white);
-      transition: background 0.15s;
-    }
-    .btn-save:hover { background: var(--navy-light); }
-    .btn-save:active { transform: scale(0.98); }
+    .te{display:flex;flex-direction:column;gap:8px;}
+    .ter{display:flex;gap:8px;align-items:center;}
+    .tnum{width:24px;height:24px;border-radius:8px;background:var(--pc);color:var(--opc);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .ter input{flex:1;}
+    .trm{background:none;border:none;cursor:pointer;padding:4px;color:var(--osv);font-size:18px;border-radius:6px;transition:color .15s;line-height:1;}
+    .trm:hover{color:var(--err);}
+    .atb{width:100%;padding:11px;border-radius:12px;border:1.5px dashed var(--outv);background:none;font-size:13px;color:var(--p);cursor:pointer;font-family:var(--fn);font-weight:700;transition:background .15s;margin-top:8px;}
+    .atb:hover{background:var(--pc);}
+
+    .sa{display:flex;gap:10px;margin:20px 24px 0;}
+    .sa button{flex:1;}
 
     /* ALERT */
-    .alert-overlay {
-      position: fixed; inset: 0;
-      background: rgba(10,10,30,0.65);
-      z-index: 300;
-      display: flex; align-items: center; justify-content: center;
-      padding: 20px;
-      animation: fadeIn 0.15s ease;
-    }
-    .alert-box {
-      background: var(--white); border-radius: var(--radius-xl);
-      padding: 28px 24px 24px; width: 100%; max-width: 340px;
-      text-align: center;
-      animation: popIn 0.2s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    @keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:none; opacity:1; } }
-    .alert-avatar {
-      width: 64px; height: 64px; border-radius: 50%;
-      margin: 0 auto 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Lora', serif; font-size: 22px; font-weight: 700;
-    }
-    .alert-name {
-      font-family: 'Lora', serif; font-size: 20px; font-weight: 700;
-      color: var(--navy); margin-bottom: 3px;
-    }
-    .alert-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; }
-    .alert-task-label {
-      font-size: 10px; font-weight: 500; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
-    }
-    .alert-task {
-      background: var(--coral-pale); color: var(--coral);
-      border: 1.5px solid var(--coral-border);
-      border-radius: var(--radius-md); padding: 12px 16px;
-      font-size: 16px; font-weight: 600; font-family: 'Lora', serif;
-      margin-bottom: 18px;
-    }
-    .alert-task.all-done { background: var(--teal-light); color: var(--teal); border-color: var(--teal-border); }
-    .alert-btn-primary {
-      width: 100%; padding: 13px; border: none; border-radius: 99px;
-      background: var(--navy); color: var(--white);
-      font-size: 14px; font-weight: 500; cursor: pointer;
-      font-family: 'DM Sans', sans-serif; margin-bottom: 8px;
-    }
-    .alert-btn-secondary {
-      width: 100%; padding: 11px; border: 1.5px solid var(--border); border-radius: 99px;
-      background: none; color: var(--text-secondary);
-      font-size: 13px; font-weight: 500; cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-    }
+    .adlg{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.4);animation:sc .15s ease;}
+    .ac{background:var(--s1);border-radius:28px;padding:24px;width:100%;max-width:320px;text-align:center;animation:dp .22s cubic-bezier(.34,1.4,.64,1);}
+    @keyframes dp{from{transform:scale(.88);opacity:0}to{transform:none;opacity:1}}
+    .aav{width:64px;height:64px;border-radius:20px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;}
+    .an{font-size:20px;font-weight:900;color:var(--os);margin-bottom:3px;}
+    .am{font-size:12px;color:var(--osv);margin-bottom:16px;}
+    .al{font-size:10px;font-weight:800;color:var(--osv);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+    .atk{background:var(--pc);color:var(--opc);border-radius:16px;padding:14px 16px;font-size:16px;font-weight:800;margin-bottom:20px;}
+    .atk.done{background:var(--tcc);color:var(--otcc);}
+    .aa{display:flex;flex-direction:column;gap:8px;}
+    .ab1{width:100%;padding:13px;border:none;border-radius:99px;background:var(--p);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:var(--fn);}
+    .ab2{width:100%;padding:12px;border:1.5px solid var(--outv);border-radius:99px;background:none;color:var(--osv);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fn);}
 
-    /* TIMER PULSE */
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-    .pulsing { animation: pulse 1.2s ease-in-out infinite; }
+    /* RATING */
+    .rsb{display:flex;gap:8px;justify-content:center;margin:8px 0 4px;}
+    .rsb button{font-size:36px;cursor:pointer;background:none;border:none;padding:4px;color:var(--outv);transition:color .1s,transform .1s;}
+    .rsb button.l{color:#F59E0B;}
+    .rsb button:active{transform:scale(1.2);}
+    .rlt{text-align:center;font-size:13px;color:var(--osv);margin-bottom:12px;min-height:20px;font-weight:600;}
 
-    /* QUICK NOTES & RATING */
-    .card-footer {
-      margin-top: 10px; padding-top: 10px;
-      border-top: 1px dashed var(--border);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .note-snippet {
-      flex: 1; font-size: 11px; color: var(--text-secondary);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      font-style: italic;
-    }
-    .note-snippet.empty { color: var(--text-muted); font-style: normal; }
-    .note-btn {
-      background: none; border: 1.5px solid var(--border);
-      border-radius: 99px; padding: 4px 11px;
-      font-size: 11px; font-weight: 500; color: var(--text-secondary);
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      white-space: nowrap; flex-shrink: 0;
-      transition: all 0.15s;
-    }
-    .note-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .pn{background:var(--sv);border-radius:12px;padding:10px 13px;font-size:12px;color:var(--osv);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+    .ntl{font-size:10px;color:var(--out);white-space:nowrap;flex-shrink:0;}
 
-    .star-row { display: flex; gap: 3px; align-items: center; margin-top: 8px; }
-    .star-label { font-size: 10px; color: var(--text-muted); margin-right: 2px; }
-    .star {
-      font-size: 18px; cursor: pointer; line-height: 1;
-      color: var(--border); transition: color 0.1s;
-      background: none; border: none; padding: 0;
-    }
-    .star.lit { color: #BA7517; }
-    .star:hover { color: #EF9F27; }
+    /* SETTINGS */
+    .so{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;border:1.5px solid var(--outv);cursor:pointer;margin-bottom:8px;transition:all .15s;}
+    .so.sel{border-color:var(--p);background:var(--pc);}
+    .sic{width:36px;height:36px;border-radius:10px;background:var(--sv);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+    .so.sel .sic{background:var(--scc);}
+    .snt{font-size:14px;font-weight:700;color:var(--os);}
+    .sds{font-size:11px;color:var(--osv);}
+    .srd{width:20px;height:20px;border-radius:50%;border:2px solid var(--outv);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+    .so.sel .srd{border-color:var(--p);}
+    .srd::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--p);display:none;}
+    .so.sel .srd::after{display:block;}
 
-    /* SESSION NOTES IN CARD */
-    .session-notes-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
-    .session-note-item {
-      font-size: 11px; background: var(--cream);
-      border: 1px solid var(--border); border-radius: 6px;
-      padding: 5px 9px; color: var(--text-secondary);
-      display: flex; justify-content: space-between; align-items: flex-start; gap: 6px;
-    }
-    .note-time { font-size: 10px; color: var(--text-muted); flex-shrink: 0; }
+    .trow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--outv);}
+    .trow:last-child{border-bottom:none;}
+    .tnm{font-size:14px;font-weight:700;color:var(--os);}
+    .tds{font-size:11px;color:var(--osv);margin-top:2px;}
+    .tog{width:52px;height:32px;border-radius:99px;background:var(--sv);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+    .tog.on{background:var(--p);}
+    .tog::after{content:'';position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+    .tog.on::after{transform:translateX(20px);}
+    .pvb{width:100%;padding:11px;border-radius:99px;border:1.5px solid var(--outv);background:none;font-size:13px;font-weight:700;color:var(--p);cursor:pointer;font-family:var(--fn);margin-top:4px;}
 
-    /* NOTE SHEET */
-    .rating-picker { display: flex; gap: 6px; margin-bottom: 6px; }
-    .rating-star {
-      font-size: 28px; cursor: pointer; background: none; border: none; padding: 2px;
-      color: var(--border); transition: color 0.1s;
-    }
-    .rating-star.lit { color: #BA7517; }
-
-    /* SOUND SETTINGS */
-    .sound-options { display: flex; flex-direction: column; gap: 8px; }
-    .sound-opt {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 11px 14px; border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm); background: var(--cream);
-      cursor: pointer; transition: border-color 0.15s;
-    }
-    .sound-opt.on { border-color: var(--navy); background: var(--white); }
-    .sound-opt-left { display: flex; align-items: center; gap: 10px; }
-    .sound-opt-icon { font-size: 18px; width: 20px; text-align: center; }
-    .sound-opt-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-    .sound-opt-sub { font-size: 11px; color: var(--text-secondary); }
-    .sound-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; }
-    .sound-opt.on .sound-check { background: var(--navy); border-color: var(--navy); }
-
-    .toggle-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 0; border-bottom: 1px solid var(--border);
-    }
-    .toggle-row:last-child { border-bottom: none; }
-    .toggle-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-    .toggle-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
-    .toggle {
-      width: 44px; height: 26px; border-radius: 99px;
-      background: var(--border); border: none; cursor: pointer;
-      position: relative; transition: background 0.2s; flex-shrink: 0;
-    }
-    .toggle.on { background: var(--navy); }
-    .toggle::after {
-      content: ''; position: absolute; top: 3px; left: 3px;
-      width: 20px; height: 20px; border-radius: 50%; background: white;
-      transition: transform 0.2s;
-    }
-    .toggle.on::after { transform: translateX(18px); }
-
-    /* SCROLLBAR */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    #toast{position:fixed;bottom:calc(var(--nh)+80px);left:50%;transform:translateX(-50%);background:#323232;color:#fff;padding:10px 22px;border-radius:99px;font-size:13px;font-weight:700;z-index:300;display:none;white-space:nowrap;box-shadow:var(--sh2);}
   </style>
 </head>
 <body>
-
 <div id="app">
-  <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-title">&#x1F4D6; Class Timer</div>
-      <div class="topbar-sub" id="topbar-sub">Tuition teacher app</div>
+  <div class="tb">
+    <div class="tb-logo"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg></div>
+    <div class="tb-title">ScholarPro</div>
+    <div class="tb-clock">
+      <div class="tb-time" id="ck">--:--</div>
+      <div class="tb-ampm" id="ca">--</div>
     </div>
-    <div style="display:flex;align-items:center;gap:6px;">
-      <div style="text-align:center;">
-        <div class="topbar-clock" id="live-clock">--:--</div>
-        <div class="topbar-clock-label" id="live-ampm">--</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:6px;">
-      <button class="settings-btn" onclick="openSettings()">&#9881; Sound</button>
-      <button class="topbar-add" onclick="openAdd()">
-        <span style="font-size:16px;line-height:1;">+</span> Add
-      </button>
-    </div>
+    <button class="ib" onclick="openSettings()"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
   </div>
-  <div id="warn-banner" style="display:none;" class="warn-banner">
-    <div class="warn-dot"></div>
-    <span id="warn-text">2 minutes left for a student!</span>
+  <div class="sumrow" id="sumrow" style="display:none;">
+    <div class="sc-chip tot"><div class="sc-dot" style="background:#625B71;"></div><span id="st">0 students</span></div>
+    <div class="sc-chip act"><div class="sc-dot" style="background:#6750A4;"></div><span id="sa">0 active</span></div>
+    <div class="sc-chip don"><div class="sc-dot" style="background:#006A6A;"></div><span id="sd">0 done</span></div>
   </div>
-
-  <div class="stats-bar" id="stats-bar" style="display:none;">
-    <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total</div></div>
-    <div class="stat-divider"></div>
-    <div class="stat"><div class="stat-num" id="stat-running">0</div><div class="stat-label">Active</div></div>
-    <div class="stat-divider"></div>
-    <div class="stat"><div class="stat-num" id="stat-done">0</div><div class="stat-label">Done</div></div>
+  <div id="wb" style="display:none;" class="warn">
+    <div class="warn-ic"><svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 14h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg></div>
+    <span class="warn-tx" id="wt">2 min left!</span>
+    <button class="warn-cl" onclick="document.getElementById('wb').style.display='none'">&#x2715;</button>
   </div>
-
-  <div id="student-list" class="student-list"></div>
-</div>
-
-<!-- ADD STUDENT SHEET -->
-<div id="add-sheet" style="display:none;" class="overlay" onclick="closeIfOverlay(event,'add-sheet')">
-  <div class="sheet" onclick="event.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">Add new student</div>
-
-    <div class="two-col">
-      <div class="field-group">
-        <label class="field-label">Name</label>
-        <input type="text" id="f-name" placeholder="Arjun Sharma" />
-      </div>
-      <div class="field-group">
-        <label class="field-label">Grade / Class</label>
-        <input type="text" id="f-grade" placeholder="Class 9" />
-      </div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Subject</label>
-      <input type="text" id="f-subject" placeholder="Mathematics" />
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Notes</label>
-      <textarea id="f-notes" placeholder="Weak in algebra, needs extra practice..."></textarea>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Timer duration</label>
-      <div class="presets" id="add-presets">
-        <button class="preset" onclick="pickPreset(this,5)">5 min</button>
-        <button class="preset" onclick="pickPreset(this,10)">10 min</button>
-        <button class="preset" onclick="pickPreset(this,15)">15 min</button>
-        <button class="preset" onclick="pickPreset(this,30)">30 min</button>
-      </div>
-      <input type="number" id="f-dur" placeholder="Custom (minutes)" min="1" max="180" oninput="clearPresets('add-presets')" />
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Tasks in order</label>
-      <div class="task-editor" id="task-editor"></div>
-      <button class="add-task" onclick="addTaskRow()">+ Add task</button>
-    </div>
-
-    <div class="sheet-actions">
-      <button class="btn-cancel" onclick="close('add-sheet')">Cancel</button>
-      <button class="btn-save" onclick="saveStudent()">Add Student</button>
-    </div>
+  <div class="scr" id="sl"></div>
+  <button class="fab" onclick="openAdd()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+  <div class="bnav">
+    <div class="ni on" id="n0"><div class="nind"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div><span class="nl">Session</span></div>
+    <div class="ni" id="n1" onclick="toast('Students coming soon!')"><div class="nind"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><span class="nl">Students</span></div>
+    <div class="ni" id="n2" onclick="toast('Notes coming soon!')"><div class="nind"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><span class="nl">Notes</span></div>
+    <div class="ni" id="n3" onclick="openSettings()"><div class="nind"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div><span class="nl">Settings</span></div>
   </div>
 </div>
+<div id="toast"></div>
 
-<!-- NEW TIMER SHEET -->
-<div id="timer-sheet" style="display:none;" class="overlay" onclick="closeIfOverlay(event,'timer-sheet')">
-  <div class="sheet" onclick="event.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="timer-sheet-title">Set new timer</div>
-    <div class="field-group">
-      <label class="field-label">Duration</label>
-      <div class="presets" id="timer-presets">
-        <button class="preset" onclick="pickTimerPreset(this,5)">5 min</button>
-        <button class="preset" onclick="pickTimerPreset(this,10)">10 min</button>
-        <button class="preset" onclick="pickTimerPreset(this,15)">15 min</button>
-        <button class="preset" onclick="pickTimerPreset(this,30)">30 min</button>
-      </div>
-      <input type="number" id="nt-dur" placeholder="Custom (minutes)" min="1" max="180" oninput="clearPresets('timer-presets')" />
-    </div>
-    <div class="sheet-actions">
-      <button class="btn-cancel" onclick="close('timer-sheet')">Cancel</button>
-      <button class="btn-save" onclick="applyTimer()">Start Timer</button>
-    </div>
+<!-- ADD -->
+<div id="as" style="display:none;" class="scrim" onclick="cs('a')"></div>
+<div id="ash" style="display:none;" class="bsh">
+  <div class="sdrag"></div>
+  <div class="stitle">Add new student</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 24px 14px;">
+    <div class="ff" style="margin:0;"><label class="fl">Name</label><input class="fi" type="text" id="fn" placeholder="Arjun Sharma"/></div>
+    <div class="ff" style="margin:0;"><label class="fl">Grade</label><input class="fi" type="text" id="fg" placeholder="Class 9"/></div>
   </div>
+  <div class="ff"><label class="fl">Subject</label><input class="fi" type="text" id="fsub" placeholder="Mathematics"/></div>
+  <div class="ff"><label class="fl">Notes</label><textarea class="fi fta" id="fno" placeholder="Weak in algebra..."></textarea></div>
+  <div class="ff">
+    <label class="fl">Timer duration</label>
+    <div class="tpre" id="ap"><button class="tc" onclick="pp(this,5,'a')">5 min</button><button class="tc" onclick="pp(this,10,'a')">10 min</button><button class="tc" onclick="pp(this,15,'a')">15 min</button><button class="tc" onclick="pp(this,30,'a')">30 min</button></div>
+    <input class="fi" type="number" id="fd" placeholder="Custom minutes" min="1" max="180" oninput="cp('ap')"/>
+  </div>
+  <div class="ff">
+    <label class="fl">Tasks in order</label>
+    <div class="te" id="te"></div>
+    <button class="atb" onclick="atr()">+ Add task</button>
+  </div>
+  <div class="sa"><button class="mb out" onclick="cs('a')">Cancel</button><button class="mb fil" onclick="sv()">Add student</button></div>
 </div>
 
-<!-- SOUND SETTINGS SHEET -->
-<div id="settings-sheet" style="display:none;" class="overlay" onclick="closeIfOverlay(event,'settings-sheet')">
-  <div class="sheet" onclick="event.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">Alert settings</div>
-
-    <div class="field-group">
-      <label class="field-label">Alarm sound</label>
-      <div class="sound-options">
-        <div class="sound-opt on" id="snd-bell" onclick="selectSound('bell')">
-          <div class="sound-opt-left">
-            <div class="sound-opt-icon">&#x1F514;</div>
-            <div><div class="sound-opt-name">Bell</div><div class="sound-opt-sub">Classic school bell tone</div></div>
-          </div>
-          <div class="sound-check"></div>
-        </div>
-        <div class="sound-opt" id="snd-chime" onclick="selectSound('chime')">
-          <div class="sound-opt-left">
-            <div class="sound-opt-icon">&#x1F3B5;</div>
-            <div><div class="sound-opt-name">Chime</div><div class="sound-opt-sub">Soft melodic chime</div></div>
-          </div>
-          <div class="sound-check"></div>
-        </div>
-        <div class="sound-opt" id="snd-beep" onclick="selectSound('beep')">
-          <div class="sound-opt-left">
-            <div class="sound-opt-icon">&#x23F0;</div>
-            <div><div class="sound-opt-name">Beep</div><div class="sound-opt-sub">Short digital beep</div></div>
-          </div>
-          <div class="sound-check"></div>
-        </div>
-        <div class="sound-opt" id="snd-silent" onclick="selectSound('silent')">
-          <div class="sound-opt-left">
-            <div class="sound-opt-icon">&#x1F507;</div>
-            <div><div class="sound-opt-name">Silent</div><div class="sound-opt-sub">Vibration only</div></div>
-          </div>
-          <div class="sound-check"></div>
-        </div>
-      </div>
-      <button style="margin-top:10px;width:100%;padding:9px;border:1.5px solid var(--border);border-radius:99px;background:var(--cream);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text-secondary);" onclick="previewSound()">&#9654; Preview sound</button>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Alerts</label>
-      <div class="toggle-row">
-        <div><div class="toggle-label">2-minute warning</div><div class="toggle-sub">Soft alert when 2 min remain</div></div>
-        <button class="toggle on" id="tog-warn" onclick="toggleSetting('warn')"></button>
-      </div>
-      <div class="toggle-row">
-        <div><div class="toggle-label">Vibration</div><div class="toggle-sub">Vibrate on alarm (Android)</div></div>
-        <button class="toggle on" id="tog-vibe" onclick="toggleSetting('vibe')"></button>
-      </div>
-      <div class="toggle-row">
-        <div><div class="toggle-label">Warning vibration</div><div class="toggle-sub">Also vibrate on 2-min warning</div></div>
-        <button class="toggle" id="tog-warnvibe" onclick="toggleSetting('warnvibe')"></button>
-      </div>
-    </div>
-
-    <div class="sheet-actions">
-      <button class="btn-save" onclick="close('settings-sheet')">Done</button>
-    </div>
+<!-- TIMER -->
+<div id="ts" style="display:none;" class="scrim" onclick="cs('t')"></div>
+<div id="tsh" style="display:none;" class="bsh">
+  <div class="sdrag"></div>
+  <div class="stitle" id="tst">Set timer</div>
+  <div class="ff">
+    <label class="fl">Duration</label>
+    <div class="tpre" id="tp"><button class="tc" onclick="pp(this,5,'t')">5 min</button><button class="tc" onclick="pp(this,10,'t')">10 min</button><button class="tc" onclick="pp(this,15,'t')">15 min</button><button class="tc" onclick="pp(this,30,'t')">30 min</button></div>
+    <input class="fi" type="number" id="nd" placeholder="Custom minutes" min="1" max="180" oninput="cp('tp')"/>
   </div>
+  <div class="sa"><button class="mb out" onclick="cs('t')">Cancel</button><button class="mb fil" onclick="at()">Start timer</button></div>
 </div>
 
-<!-- NOTE SHEET -->
-<div id="note-sheet" style="display:none;" class="overlay" onclick="closeIfOverlay(event,'note-sheet')">
-  <div class="sheet" onclick="event.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="note-sheet-title">Session notes</div>
-
-    <div class="field-group">
-      <label class="field-label">Task performance rating</label>
-      <div class="rating-picker" id="rating-picker">
-        <button class="rating-star" onclick="setRating(1)">&#9733;</button>
-        <button class="rating-star" onclick="setRating(2)">&#9733;</button>
-        <button class="rating-star" onclick="setRating(3)">&#9733;</button>
-        <button class="rating-star" onclick="setRating(4)">&#9733;</button>
-        <button class="rating-star" onclick="setRating(5)">&#9733;</button>
-      </div>
-      <div id="rating-label" style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Tap to rate</div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Quick note</label>
-      <textarea id="note-input" placeholder="e.g. Understood well, struggled with fractions, very focused today..."></textarea>
-    </div>
-
-    <div id="past-notes-wrap" style="display:none;">
-      <label class="field-label" style="display:block;margin-bottom:6px;">Notes this session</label>
-      <div id="past-notes-list" class="session-notes-list"></div>
-    </div>
-
-    <div class="sheet-actions">
-      <button class="btn-cancel" onclick="close('note-sheet')">Close</button>
-      <button class="btn-save" onclick="saveNote()">Save Note</button>
-    </div>
+<!-- NOTE -->
+<div id="ns" style="display:none;" class="scrim" onclick="cs('n')"></div>
+<div id="nsh" style="display:none;" class="bsh">
+  <div class="sdrag"></div>
+  <div class="stitle" id="nst">Notes</div>
+  <div class="ff">
+    <label class="fl">Performance rating</label>
+    <div class="rsb" id="rp"><button onclick="sr(1)">&#9733;</button><button onclick="sr(2)">&#9733;</button><button onclick="sr(3)">&#9733;</button><button onclick="sr(4)">&#9733;</button><button onclick="sr(5)">&#9733;</button></div>
+    <div class="rlt" id="rl">Tap to rate</div>
   </div>
+  <div class="ff"><label class="fl">Quick note</label><textarea class="fi fta" id="ni" placeholder="Understood well, struggled with fractions..."></textarea></div>
+  <div class="ff" id="pns" style="display:none;"><label class="fl">This session</label><div id="pnl"></div></div>
+  <div class="sa"><button class="mb out" onclick="cs('n')">Close</button><button class="mb fil" onclick="sn()">Save note</button></div>
 </div>
 
-<div id="alert-overlay" style="display:none;" class="alert-overlay">
-  <div class="alert-box">
-    <div class="alert-avatar" id="al-avatar"></div>
-    <div class="alert-name" id="al-name"></div>
-    <div class="alert-meta" id="al-meta"></div>
-    <div class="alert-task-label">Next task</div>
-    <div class="alert-task" id="al-task"></div>
-    <button class="alert-btn-primary" id="al-primary" onclick="alertDone()">Mark done &amp; set new timer</button>
-    <button class="alert-btn-secondary" onclick="alertDismiss()">Dismiss</button>
+<!-- SETTINGS -->
+<div id="ss" style="display:none;" class="scrim" onclick="cs('s')"></div>
+<div id="ssh" style="display:none;" class="bsh">
+  <div class="sdrag"></div>
+  <div class="stitle">Alert settings</div>
+  <div class="ff">
+    <label class="fl">Alarm sound</label>
+    <div id="sop">
+      <div class="so sel" id="sb" onclick="sel('bell')"><div class="sic">&#x1F514;</div><div><div class="snt">Bell</div><div class="sds">Classic school bell</div></div><div class="srd"></div></div>
+      <div class="so" id="sc2" onclick="sel('chime')"><div class="sic">&#x1F3B5;</div><div><div class="snt">Chime</div><div class="sds">Soft melodic chime</div></div><div class="srd"></div></div>
+      <div class="so" id="sbp" onclick="sel('beep')"><div class="sic">&#x23F0;</div><div><div class="snt">Beep</div><div class="sds">Short digital beep</div></div><div class="srd"></div></div>
+      <div class="so" id="ssi" onclick="sel('silent')"><div class="sic">&#x1F507;</div><div><div class="snt">Silent</div><div class="sds">Vibration only</div></div><div class="srd"></div></div>
+    </div>
+    <button class="pvb" onclick="prev()">&#9654; Preview sound</button>
+  </div>
+  <div class="ff">
+    <label class="fl">Alert options</label>
+    <div class="trow"><div><div class="tnm">2-minute warning</div><div class="tds">Soft alert when 2 min remain</div></div><button class="tog on" id="tw" onclick="tg('warn')"></button></div>
+    <div class="trow"><div><div class="tnm">Vibration on alarm</div><div class="tds">Vibrate when timer ends</div></div><button class="tog on" id="tv" onclick="tg('vibe')"></button></div>
+    <div class="trow"><div><div class="tnm">Vibrate on warning</div><div class="tds">Also vibrate at 2-min mark</div></div><button class="tog" id="twv" onclick="tg('warnvibe')"></button></div>
+  </div>
+  <div class="sa"><button class="mb fil" onclick="cs('s')">Done</button></div>
+</div>
+
+<!-- ALERT -->
+<div id="adlg" style="display:none;" class="adlg">
+  <div class="ac">
+    <div class="aav" id="aav"></div>
+    <div class="an" id="aan"></div>
+    <div class="am" id="aam"></div>
+    <div class="al">Next task</div>
+    <div class="atk" id="atk"></div>
+    <div class="aa">
+      <button class="ab1" id="ap1" onclick="ad()">Mark done &amp; set new timer</button>
+      <button class="ab2" onclick="adx()">Dismiss</button>
+    </div>
   </div>
 </div>
 
 <script>
-  let students = [];
-  let alertQueue = [];
-  let alertActive = null;
-  let timerTargetId = null;
-  let addPresetVal = null;
-  let timerPresetVal = null;
-  let audioCtx = null;
-  let taskDoneMode = false;
+  let students=[],alertQ=[],alertAct=null,timerTgt=null,noteTgt=null;
+  let addPre=null,timPre=null,pendRat=0,tdm=false,warned=new Set();
+  let aCtx=null,settings={sound:'bell',warn:true,vibe:true,warnvibe:false};
 
-  // Settings state
-  let settings = { sound: 'bell', warn: true, vibe: true, warnvibe: false };
-  // Track which students have already fired 2-min warning this timer run
-  let warnedIds = new Set();
+  const AVC=[['#D0BCFF','#4A0080'],['#CCE8E7','#004F4F'],['#F9DEDC','#8C1D18'],['#DAE2FF','#001A72'],['#C8E6C9','#1B5E20'],['#FFE0B2','#BF360C'],['#F8BBD0','#880E4F'],['#B2EBF2','#006064']];
+  const avc=id=>AVC[id.charCodeAt(0)%AVC.length];
+  const ini=n=>(n||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+  const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const fmt=s=>{s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
+  const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  // ── LIVE CLOCK ──
-  function updateClock() {
-    const now = new Date();
-    let h = now.getHours(), m = now.getMinutes();
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12 || 12;
-    document.getElementById('live-clock').textContent = h + ':' + String(m).padStart(2,'0');
-    document.getElementById('live-ampm').textContent = ampm;
-  }
-  updateClock();
-  setInterval(updateClock, 10000);
+  function clk(){const n=new Date();let h=n.getHours(),m=n.getMinutes(),a=h>=12?'PM':'AM';h=h%12||12;document.getElementById('ck').textContent=h+':'+String(m).padStart(2,'0');document.getElementById('ca').textContent=a;}
+  clk();setInterval(clk,10000);
 
-  // ── AUDIO ENGINE ──
-  function getCtx() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    return audioCtx;
-  }
+  function gac(){if(!aCtx)aCtx=new(window.AudioContext||window.webkitAudioContext)();return aCtx;}
+  function bell(){try{const c=gac();[0,.28,.56,.84].forEach(t=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(.35,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+.22);o.start(c.currentTime+t);o.stop(c.currentTime+t+.3);});}catch(e){}}
+  function chime(){try{const c=gac(),f=[523,659,784,1047];f.forEach((fr,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=fr;o.type='sine';const t=c.currentTime+i*.18;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.28,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+.6);o.start(t);o.stop(t+.65);});}catch(e){}}
+  function beep(){try{const c=gac();[0,.22].forEach(t=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=1200;o.type='square';g.gain.setValueAtTime(.15,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+.15);o.start(c.currentTime+t);o.stop(c.currentTime+t+.18);});}catch(e){}}
+  function warn2(){try{const c=gac(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=660;o.type='sine';g.gain.setValueAtTime(.18,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.start(c.currentTime);o.stop(c.currentTime+.45);}catch(e){}}
+  function alarm(){if(settings.sound==='bell')bell();else if(settings.sound==='chime')chime();else if(settings.sound==='beep')beep();if(settings.vibe&&navigator.vibrate)navigator.vibrate([200,100,200,100,400]);}
+  function prev(){if(settings.sound==='bell')bell();else if(settings.sound==='chime')chime();else if(settings.sound==='beep')beep();}
 
-  function playBell() {
-    const ctx = getCtx();
-    [0, 0.28, 0.56, 0.84].forEach(t => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = 880; o.type = 'sine';
-      g.gain.setValueAtTime(0.35, ctx.currentTime + t);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.22);
-      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.3);
-    });
-  }
-
-  function playChime() {
-    const ctx = getCtx();
-    const freqs = [523, 659, 784, 1047];
-    freqs.forEach((f, i) => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = f; o.type = 'sine';
-      const t = ctx.currentTime + i * 0.18;
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.28, t + 0.04);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
-      o.start(t); o.stop(t + 0.65);
-    });
-  }
-
-  function playBeep() {
-    const ctx = getCtx();
-    [0, 0.22].forEach(t => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = 1200; o.type = 'square';
-      g.gain.setValueAtTime(0.15, ctx.currentTime + t);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.15);
-      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.18);
-    });
-  }
-
-  function playSoftWarn() {
-    const ctx = getCtx();
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = 660; o.type = 'sine';
-    g.gain.setValueAtTime(0.18, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-    o.start(ctx.currentTime); o.stop(ctx.currentTime + 0.45);
-  }
-
-  function vibrate(pattern) {
-    if (settings.vibe && navigator.vibrate) navigator.vibrate(pattern);
-  }
-
-  function playAlarm() {
-    try {
-      if (settings.sound === 'bell') playBell();
-      else if (settings.sound === 'chime') playChime();
-      else if (settings.sound === 'beep') playBeep();
-      vibrate([200, 100, 200, 100, 400]);
-    } catch(e) {}
-  }
-
-  function playWarning() {
-    try {
-      playSoftWarn();
-      if (settings.warnvibe && navigator.vibrate) navigator.vibrate([100, 50, 100]);
-    } catch(e) {}
-  }
-
-  function previewSound() {
-    try {
-      if (settings.sound === 'bell') playBell();
-      else if (settings.sound === 'chime') playChime();
-      else if (settings.sound === 'beep') playBeep();
-    } catch(e) {}
-  }
-
-  // ── SETTINGS ──
-  function openSettings() {
-    renderSettingsUI();
-    document.getElementById('settings-sheet').style.display = 'flex';
-  }
-
-  function renderSettingsUI() {
-    ['bell','chime','beep','silent'].forEach(s => {
-      document.getElementById('snd-'+s).classList.toggle('on', settings.sound === s);
-    });
-    ['warn','vibe','warnvibe'].forEach(k => {
-      document.getElementById('tog-'+k).classList.toggle('on', settings[k]);
-    });
-  }
-
-  function selectSound(s) {
-    settings.sound = s;
-    renderSettingsUI();
-  }
-
-  function toggleSetting(k) {
-    settings[k] = !settings[k];
-    renderSettingsUI();
-  }
-
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-
-  function initials(name) {
-    return (name||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
-  }
-
-  const AVATAR_COLORS = [
-    ['#F5C4B3','#712B13'],['#B5D4F4','#0C447C'],['#C0DD97','#27500A'],
-    ['#CECBF6','#3C3489'],['#9FE1CB','#085041'],['#FAC775','#633806'],
-  ];
-  function avatarColors(id) {
-    const i = id.charCodeAt(0) % AVATAR_COLORS.length;
-    return AVATAR_COLORS[i];
-  }
-
-  function fmt(s) {
-    if(s<0)s=0;
-    return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-  }
-
-  function playAlarm() {
-    try {
-      if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-      [0,0.28,0.56,0.84].forEach(t=>{
-        const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
-        o.frequency.value=880; o.type='sine';
-        g.gain.setValueAtTime(0.35,audioCtx.currentTime+t);
-        g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+t+0.22);
-        o.start(audioCtx.currentTime+t); o.stop(audioCtx.currentTime+t+0.22);
-      });
-    } catch(e){}
-  }
-
-  function render() {
-    const list = document.getElementById('student-list');
-    const statsBar = document.getElementById('stats-bar');
-    const sub = document.getElementById('topbar-sub');
-
-    if (!students.length) {
-      statsBar.style.display = 'none';
-      sub.textContent = 'Tuition teacher app';
-      list.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">&#x1F4DA;</div>
-          <div class="empty-title">No students yet</div>
-          <div class="empty-sub">Add your first student to start managing timers for the session.</div>
-          <button class="empty-cta" onclick="openAdd()">+ Add first student</button>
-        </div>`;
+  function render(){
+    const sl=document.getElementById('sl'),sr=document.getElementById('sumrow');
+    if(!students.length){
+      sr.style.display='none';
+      sl.innerHTML=`<div class="empty"><div class="empty-il"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg></div><div class="empty-t">Ready to teach?</div><div class="empty-s">Add your students to start managing timers for today's session.</div><button class="empty-b" onclick="openAdd()">+ Add first student</button></div>`;
       return;
     }
-
-    const running = students.filter(s=>s.state==='running').length;
-    const expired = students.filter(s=>s.state==='expired').length;
-    statsBar.style.display = 'flex';
-    document.getElementById('stat-total').textContent = students.length;
-    document.getElementById('stat-running').textContent = running;
-    document.getElementById('stat-done').textContent = expired;
-    sub.textContent = running + ' timer' + (running!==1?'s':'') + ' running';
-
-    list.innerHTML = students.map(renderCard).join('');
+    const run=students.filter(s=>s.state==='running').length,exp=students.filter(s=>s.state==='expired').length;
+    sr.style.display='flex';
+    document.getElementById('st').textContent=students.length+' student'+(students.length>1?'s':'');
+    document.getElementById('sa').textContent=run+' active';
+    document.getElementById('sd').textContent=exp+' done';
+    sl.innerHTML=students.map(rc).join('');
   }
 
-  function renderCard(s) {
-    const [abg, afg] = avatarColors(s.id);
-    const allDone = s.taskIndex >= s.tasks.length;
-    const currentTask = allDone ? 'All tasks done!' : s.tasks[s.taskIndex];
-    const pct = s.totalSecs > 0 ? Math.max(0, Math.min(100, ((s.totalSecs - s.secsLeft) / s.totalSecs) * 100)) : 0;
-    const timerClass = ['idle','running','paused','expired'].includes(s.state) ? s.state : 'idle';
-    const cardClass = s.state === 'running' ? 'running' : s.state === 'expired' ? 'expired' : s.state === 'paused' ? 'paused' : '';
-    const progClass = s.state === 'expired' ? 'expired' : s.state === 'paused' ? 'paused' : '';
-    const isPulsing = s.state === 'expired';
-
-    let ctrlBtns = '';
-    if (s.state === 'idle') {
-      ctrlBtns = `<button class="ctrl-btn start" onclick="startTimer('${s.id}')">Start</button>`;
-    } else if (s.state === 'running') {
-      ctrlBtns = `<button class="ctrl-btn pause" onclick="pauseTimer('${s.id}')">Pause</button>`;
-    } else if (s.state === 'paused') {
-      ctrlBtns = `<button class="ctrl-btn resume" onclick="resumeTimer('${s.id}')">Resume</button>`;
-    } else if (s.state === 'expired') {
-      ctrlBtns = `<button class="ctrl-btn start" onclick="openTimer('${s.id}',false)">New Timer</button>`;
-    }
-    ctrlBtns += `<button class="ctrl-btn reset" onclick="openTimer('${s.id}',false)" title="Set timer">&#9664;</button>`;
-
-    const taskPills = s.tasks.map((t,i)=>{
-      let cls = 'task-pill';
-      if(i < s.taskIndex) cls += ' done';
-      else if(i === s.taskIndex) cls += ' active';
-      return `<span class="${cls}">${esc(t)}</span>`;
-    }).join('');
-
-    return `<div class="student-card ${cardClass}" id="sc-${s.id}">
-      <div class="card-header">
-        <div class="avatar" style="background:${abg};color:${afg};">${initials(s.name)}</div>
-        <div class="student-info">
-          <div class="student-name">${esc(s.name)}</div>
-          <div class="student-meta">${esc(s.subject)} &bull; ${esc(s.grade)}</div>
-        </div>
-        <button class="card-delete" onclick="deleteStudent('${s.id}')" title="Remove">&#x2715;</button>
+  function rc(s){
+    const [abg,afg]=avc(s.id),allD=s.taskIndex>=s.tasks.length;
+    const task=allD?'All done!':s.tasks[s.taskIndex];
+    const pct=s.totalSecs>0?Math.max(0,Math.min(100,(s.totalSecs-s.secsLeft)/s.totalSecs*100)):0;
+    const chip=s.state==='running'?`<span class="st-chip st-r">Running</span>`:s.state==='paused'?`<span class="st-chip st-p">Paused</span>`:s.state==='expired'?`<span class="st-chip st-e">Time up!</span>`:`<span class="st-chip st-i">Idle</span>`;
+    let cb='';
+    if(s.state==='idle') cb=`<button class="mb fil" onclick="strt('${s.id}')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Start</button>`;
+    else if(s.state==='running') cb=`<button class="mb ton" onclick="paus('${s.id}')"><svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>Pause</button>`;
+    else if(s.state==='paused') cb=`<button class="mb fil" onclick="resu('${s.id}')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Resume</button>`;
+    else cb=`<button class="mb fil" onclick="ot('${s.id}')">New timer</button>`;
+    cb+=`<button class="mb out ico" onclick="ot('${s.id}')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></button>`;
+    const pills=s.tasks.map((t,i)=>`<span class="pill ${i<s.taskIndex?'dn':i===s.taskIndex?'cur':''}">${esc(t)}</span>`).join('');
+    const stars=[1,2,3,4,5].map(i=>`<button class="s ${i<=(s.rating||0)?'l':''}" onclick="qr('${s.id}',${i})">&#9733;</button>`).join('');
+    const ln=s.sessionNotes&&s.sessionNotes.length?s.sessionNotes[s.sessionNotes.length-1].text:'';
+    return `<div class="card ${s.state}" id="c${s.id}">
+      <button class="delbtn" onclick="del('${s.id}')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+      <div class="ch">
+        <div class="av" style="background:${abg};color:${afg};">${ini(s.name)}</div>
+        <div class="ci"><div class="cn">${esc(s.name)}</div><div class="cm">${esc(s.subject)} &bull; ${esc(s.grade)}</div></div>
+        ${chip}
       </div>
-      <div class="current-task-row">
-        <span class="task-step">Task ${Math.min(s.taskIndex+1, s.tasks.length)}/${s.tasks.length}</span>
-        <span class="task-name ${allDone?'done-all':''}">${esc(currentTask)}</span>
+      <div class="tr"><span class="ts">T${Math.min(s.taskIndex+1,s.tasks.length)}/${s.tasks.length}</span><span class="tn ${allD?'ad':''}">${esc(task)}</span></div>
+      <div class="tcr">
+        <div class="td ${s.state}">${fmt(s.secsLeft)}</div>
+        <div class="cg">${cb}</div>
       </div>
-      <div class="timer-row">
-        <div class="timer-display ${timerClass} ${isPulsing?'pulsing':''}">${fmt(s.secsLeft)}</div>
-        <div class="ctrl-group">${ctrlBtns}</div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-bg"><div class="progress-fill ${progClass}" style="width:${pct.toFixed(1)}%"></div></div>
-      </div>
-      <div class="task-pills">${taskPills}</div>
-      <div class="star-row">
-        <span class="star-label">Rating:</span>
-        ${[1,2,3,4,5].map(i=>`<button class="star ${i<=(s.rating||0)?'lit':''}" onclick="quickRate('${s.id}',${i})">&#9733;</button>`).join('')}
-      </div>
-      <div class="card-footer">
-        <span class="note-snippet ${s.sessionNotes&&s.sessionNotes.length?'':'empty'}">${s.sessionNotes&&s.sessionNotes.length ? esc(s.sessionNotes[s.sessionNotes.length-1].text) : 'No notes yet'}</span>
-        <button class="note-btn" onclick="openNoteSheet('${s.id}')">+ Note</button>
+      <div class="pg"><div class="pf ${s.state==='expired'?'exp':s.state==='paused'?'pau':''}" style="width:${pct.toFixed(1)}%"></div></div>
+      <div class="pills">${pills}</div>
+      <div class="cf">
+        <div class="si">${stars}</div>
+        <span class="np ${ln?'':'e'}">${ln?esc(ln):'No notes yet'}</span>
+        <button class="nb" onclick="on2('${s.id}')">+ Note</button>
       </div>
     </div>`;
   }
 
-  function esc(s) {
-    return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
   setInterval(()=>{
-    let dirty = false;
-    const warnings = [];
+    let d=false;const ws=[];
     students.forEach(s=>{
       if(s.state==='running'){
-        s.secsLeft = Math.max(0, s.secsLeft-1);
-        dirty = true;
-        // 2-minute warning
-        if(settings.warn && s.secsLeft === 120 && !warnedIds.has(s.id)){
-          warnedIds.add(s.id);
-          warnings.push(s.name);
-          playWarning();
-        }
-        if(s.secsLeft===0){
-          s.state='expired';
-          warnedIds.delete(s.id);
-          alertQueue.push(s.id);
-        }
+        s.secsLeft=Math.max(0,s.secsLeft-1);d=true;
+        if(settings.warn&&s.secsLeft===120&&!warned.has(s.id)){warned.add(s.id);ws.push(s.name);warn2();if(settings.warnvibe&&navigator.vibrate)navigator.vibrate([100,50,100]);}
+        if(s.secsLeft===0){s.state='expired';warned.delete(s.id);alertQ.push(s.id);}
       }
     });
-    if(dirty) render();
-    // Show warning banner
-    if(warnings.length){
-      const banner = document.getElementById('warn-banner');
-      document.getElementById('warn-text').textContent =
-        '2 min left \u2014 ' + warnings.join(', ');
-      banner.style.display = 'flex';
-      setTimeout(()=>{ banner.style.display='none'; }, 6000);
-    }
-    drainAlerts();
-    updateClock();
-  }, 1000);
+    if(d)render();
+    if(ws.length){document.getElementById('wt').textContent='2 min left — '+ws.join(', ');const b=document.getElementById('wb');b.style.display='flex';setTimeout(()=>b.style.display='none',6000);}
+    drain();clk();
+  },1000);
 
-  function drainAlerts() {
-    if(alertActive || !alertQueue.length) return;
-    const id = alertQueue.shift();
-    const s = students.find(x=>x.id===id);
-    if(!s){ drainAlerts(); return; }
-    alertActive = id;
-    playAlarm();
-    const [abg,afg] = avatarColors(s.id);
-    const allDone = s.taskIndex >= s.tasks.length;
-    const task = allDone ? 'All tasks completed!' : s.tasks[s.taskIndex];
-    document.getElementById('al-avatar').style.background = abg;
-    document.getElementById('al-avatar').style.color = afg;
-    document.getElementById('al-avatar').textContent = initials(s.name);
-    document.getElementById('al-name').textContent = s.name;
-    document.getElementById('al-meta').textContent = s.subject + ' • ' + s.grade;
-    document.getElementById('al-task').textContent = task;
-    document.getElementById('al-task').className = 'alert-task' + (allDone?' all-done':'');
-    const primary = document.getElementById('al-primary');
-    if(allDone){
-      primary.textContent = 'Great work! Dismiss';
-      taskDoneMode = false;
-    } else {
-      primary.textContent = 'Mark done & set new timer';
-      taskDoneMode = true;
-    }
-    document.getElementById('alert-overlay').style.display = 'flex';
+  function drain(){
+    if(alertAct||!alertQ.length)return;
+    const id=alertQ.shift(),s=students.find(x=>x.id===id);
+    if(!s){drain();return;}
+    alertAct=id;alarm();
+    const [abg,afg]=avc(s.id),allD=s.taskIndex>=s.tasks.length,task=allD?'All tasks completed!':s.tasks[s.taskIndex];
+    const av=document.getElementById('aav');av.style.background=abg;av.style.color=afg;av.textContent=ini(s.name);
+    document.getElementById('aan').textContent=s.name;
+    document.getElementById('aam').textContent=s.subject+' • '+s.grade;
+    const tk=document.getElementById('atk');tk.textContent=task;tk.className='atk'+(allD?' done':'');
+    tdm=!allD;document.getElementById('ap1').textContent=allD?'Dismiss':'Mark done & set new timer';
+    document.getElementById('adlg').style.display='flex';
   }
+  function ad(){
+    const s=students.find(x=>x.id===alertAct);
+    if(s&&tdm&&s.taskIndex<s.tasks.length-1)s.taskIndex++;
+    document.getElementById('adlg').style.display='none';
+    const prev=alertAct;alertAct=null;
+    if(tdm&&s&&s.taskIndex<s.tasks.length)ot(prev);else render();
+    setTimeout(drain,400);
+  }
+  function adx(){document.getElementById('adlg').style.display='none';alertAct=null;render();setTimeout(drain,400);}
 
-  function alertDone() {
-    const s = students.find(x=>x.id===alertActive);
-    if(s && taskDoneMode && s.taskIndex < s.tasks.length-1) s.taskIndex++;
-    document.getElementById('alert-overlay').style.display = 'none';
-    const prevId = alertActive;
-    alertActive = null;
-    if(taskDoneMode && s && s.taskIndex < s.tasks.length) {
-      openTimer(prevId, true);
-    } else {
-      render();
-    }
-    setTimeout(drainAlerts, 400);
-  }
+  function strt(id){const s=students.find(x=>x.id===id);if(!s)return;if(s.secsLeft<=0){ot(id);return;}s.state='running';render();}
+  function paus(id){const s=students.find(x=>x.id===id);if(s){s.state='paused';render();}}
+  function resu(id){const s=students.find(x=>x.id===id);if(s){s.state='running';render();}}
+  function del(id){students=students.filter(s=>s.id!==id);render();}
 
-  function alertDismiss() {
-    document.getElementById('alert-overlay').style.display = 'none';
-    alertActive = null;
-    render();
-    setTimeout(drainAlerts, 400);
+  function openAdd(){
+    addPre=null;['fn','fg','fsub','fno','fd'].forEach(i=>document.getElementById(i).value='');
+    document.querySelectorAll('#ap .tc').forEach(b=>b.classList.remove('sel'));
+    const te=document.getElementById('te');te.innerHTML='';atr();atr();
+    os('a');
   }
+  function sv(){
+    const name=document.getElementById('fn').value.trim();if(!name){toast('Enter a student name');return;}
+    const dur=addPre||parseInt(document.getElementById('fd').value);if(!dur||dur<1){toast('Set a timer duration');return;}
+    const tasks=Array.from(document.querySelectorAll('#te input')).map(i=>i.value.trim()).filter(Boolean);if(!tasks.length){toast('Add at least one task');return;}
+    students.push({id:uid(),name,grade:document.getElementById('fg').value.trim()||'—',subject:document.getElementById('fsub').value.trim()||'General',notes:document.getElementById('fno').value.trim(),tasks,taskIndex:0,totalSecs:dur*60,secsLeft:dur*60,state:'idle',rating:0,sessionNotes:[]});
+    cs('a');render();
+  }
+  function atr(v){
+    const te=document.getElementById('te'),n=te.children.length+1,r=document.createElement('div');
+    r.className='ter';r.innerHTML=`<div class="tnum">${n}</div><input class="fi" type="text" placeholder="e.g. Read chapter ${n}" value="${v||''}"/><button class="trm" onclick="this.closest('.ter').remove();rn()">&#x2715;</button>`;
+    te.appendChild(r);
+  }
+  function rn(){document.querySelectorAll('#te .tnum').forEach((el,i)=>el.textContent=i+1);}
 
-  function startTimer(id) {
-    const s = students.find(x=>x.id===id);
-    if(!s) return;
-    if(s.secsLeft<=0){ openTimer(id,false); return; }
-    s.state='running'; render();
+  function ot(id){
+    timerTgt=id;timPre=null;document.getElementById('nd').value='';
+    document.querySelectorAll('#tp .tc').forEach(b=>b.classList.remove('sel'));
+    const s=students.find(x=>x.id===id);document.getElementById('tst').textContent=s?'Timer for '+s.name:'Set timer';
+    os('t');
   }
-  function pauseTimer(id) {
-    const s=students.find(x=>x.id===id);
-    if(s){ s.state='paused'; render(); }
-  }
-  function resumeTimer(id) {
-    const s=students.find(x=>x.id===id);
-    if(s){ s.state='running'; render(); }
-  }
-  function deleteStudent(id) {
-    students = students.filter(s=>s.id!==id);
-    render();
+  function at(){
+    const dur=timPre||parseInt(document.getElementById('nd').value);if(!dur||dur<1){toast('Set a duration');return;}
+    const s=students.find(x=>x.id===timerTgt);if(s){s.totalSecs=dur*60;s.secsLeft=dur*60;s.state='running';warned.delete(s.id);}
+    cs('t');render();
   }
 
-  function openAdd() {
-    addPresetVal = null;
-    document.getElementById('f-name').value='';
-    document.getElementById('f-grade').value='';
-    document.getElementById('f-subject').value='';
-    document.getElementById('f-notes').value='';
-    document.getElementById('f-dur').value='';
-    document.querySelectorAll('#add-presets .preset').forEach(b=>b.classList.remove('on'));
-    const ed = document.getElementById('task-editor');
-    ed.innerHTML=''; addTaskRow(); addTaskRow();
-    document.getElementById('add-sheet').style.display='flex';
+  function on2(id){
+    noteTgt=id;const s=students.find(x=>x.id===id);if(!s)return;
+    document.getElementById('nst').textContent=s.name+' — Notes';
+    document.getElementById('ni').value='';pendRat=s.rating||0;rui();
+    const past=s.sessionNotes||[],pns=document.getElementById('pns');
+    if(past.length){pns.style.display='block';document.getElementById('pnl').innerHTML=past.slice().reverse().map(n=>`<div class="pn"><span>${esc(n.text)}${n.rating?' '+['','★','★★','★★★','★★★★','★★★★★'][n.rating]:''}</span><span class="ntl">${n.time}</span></div>`).join('');}
+    else pns.style.display='none';
+    os('n');
   }
+  function sr(r){pendRat=r;rui();}
+  function rui(){
+    const l=['','Poor','Fair','Good','Great','Excellent!'];
+    document.querySelectorAll('#rp button').forEach((b,i)=>b.classList.toggle('l',i<pendRat));
+    document.getElementById('rl').textContent=pendRat?l[pendRat]:'Tap to rate';
+  }
+  function sn(){
+    const s=students.find(x=>x.id===noteTgt);if(!s)return;
+    const text=document.getElementById('ni').value.trim();if(!text&&!pendRat){cs('n');return;}
+    if(!s.sessionNotes)s.sessionNotes=[];
+    const now=new Date(),time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    s.sessionNotes.push({text:text||'(rating only)',rating:pendRat,time});
+    if(pendRat>0)s.rating=pendRat;cs('n');render();toast('Note saved!');
+  }
+  function qr(id,r){const s=students.find(x=>x.id===id);if(s){s.rating=s.rating===r?0:r;render();}}
 
-  function saveStudent() {
-    const name = document.getElementById('f-name').value.trim();
-    if(!name){ alert('Please enter a student name'); return; }
-    const dur = addPresetVal || parseInt(document.getElementById('f-dur').value);
-    if(!dur||dur<1){ alert('Please set a timer duration'); return; }
-    const tasks = Array.from(document.querySelectorAll('#task-editor input')).map(i=>i.value.trim()).filter(Boolean);
-    if(!tasks.length){ alert('Please add at least one task'); return; }
-    students.push({
-      id: uid(),
-      name,
-      grade: document.getElementById('f-grade').value.trim()||'—',
-      subject: document.getElementById('f-subject').value.trim()||'General',
-      notes: document.getElementById('f-notes').value.trim(),
-      tasks, taskIndex: 0,
-      totalSecs: dur*60, secsLeft: dur*60,
-      state: 'idle',
-      rating: 0,
-      sessionNotes: []
+  function openSettings(){rsu();os('s');}
+  function rsu(){
+    ['bell','chime','beep','silent'].forEach(x=>{
+      const el=document.getElementById(x==='bell'?'sb':x==='chime'?'sc2':x==='beep'?'sbp':'ssi');
+      if(el)el.classList.toggle('sel',settings.sound===x);
     });
-    close('add-sheet');
-    render();
+    document.getElementById('tw').classList.toggle('on',settings.warn);
+    document.getElementById('tv').classList.toggle('on',settings.vibe);
+    document.getElementById('twv').classList.toggle('on',settings.warnvibe);
   }
+  function sel(s){settings.sound=s;rsu();}
+  function tg(k){settings[k]=!settings[k];rsu();}
 
-  function openTimer(id, afterDone) {
-    timerTargetId = id;
-    timerPresetVal = null;
-    document.getElementById('nt-dur').value='';
-    document.querySelectorAll('#timer-presets .preset').forEach(b=>b.classList.remove('on'));
-    const s = students.find(x=>x.id===id);
-    document.getElementById('timer-sheet-title').textContent = s ? 'New timer for '+s.name : 'Set timer';
-    document.getElementById('timer-sheet').style.display='flex';
+  function pp(btn,v,ctx){
+    if(ctx==='a')addPre=v;else timPre=v;
+    document.querySelectorAll('#'+(ctx==='a'?'ap':'tp')+' .tc').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    if(ctx==='a')document.getElementById('fd').value='';else document.getElementById('nd').value='';
   }
+  function cp(id){addPre=null;timPre=null;document.querySelectorAll('#'+id+' .tc').forEach(b=>b.classList.remove('sel'));}
 
-  function applyTimer() {
-    const dur = timerPresetVal || parseInt(document.getElementById('nt-dur').value);
-    if(!dur||dur<1){ alert('Please set a duration'); return; }
-    const s = students.find(x=>x.id===timerTargetId);
-    if(s){ s.totalSecs=dur*60; s.secsLeft=dur*60; s.state='running'; warnedIds.delete(s.id); }
-    close('timer-sheet');
-    render();
-  }
+  function os(n){document.getElementById(n+'s').style.display='block';document.getElementById(n+'sh').style.display='block';}
+  function cs(n){document.getElementById(n+'s').style.display='none';document.getElementById(n+'sh').style.display='none';}
 
-  function addTaskRow(val) {
-    const ed = document.getElementById('task-editor');
-    const num = ed.children.length + 1;
-    const row = document.createElement('div');
-    row.className = 'task-row';
-    row.innerHTML = `
-      <div class="task-row-num">${num}</div>
-      <input type="text" placeholder="e.g. Read chapter ${num}" value="${val||''}" />
-      <button class="rm-task" onclick="this.closest('.task-row').remove(); renumberTasks();">&#x2715;</button>`;
-    ed.appendChild(row);
-  }
-
-  function renumberTasks() {
-    document.querySelectorAll('#task-editor .task-row-num').forEach((el,i)=>el.textContent=i+1);
-  }
-
-  function pickPreset(btn, val) {
-    addPresetVal = val;
-    document.getElementById('f-dur').value='';
-    document.querySelectorAll('#add-presets .preset').forEach(b=>b.classList.remove('on'));
-    btn.classList.add('on');
-  }
-
-  function clearPresets(id) {
-    addPresetVal = null; timerPresetVal = null;
-    document.querySelectorAll('#'+id+' .preset').forEach(b=>b.classList.remove('on'));
-  }
-
-  function pickTimerPreset(btn, val) {
-    timerPresetVal = val;
-    document.getElementById('nt-dur').value='';
-    document.querySelectorAll('#timer-presets .preset').forEach(b=>b.classList.remove('on'));
-    btn.classList.add('on');
-  }
-
-  let noteTargetId = null;
-  let pendingRating = 0;
-
-  function openNoteSheet(id) {
-    noteTargetId = id;
-    const s = students.find(x=>x.id===id);
-    if(!s) return;
-    document.getElementById('note-sheet-title').textContent = s.name + ' — Notes';
-    document.getElementById('note-input').value = '';
-    pendingRating = s.rating || 0;
-    renderRatingPicker();
-    const past = s.sessionNotes || [];
-    const wrap = document.getElementById('past-notes-wrap');
-    const list = document.getElementById('past-notes-list');
-    if(past.length) {
-      wrap.style.display = 'block';
-      list.innerHTML = past.slice().reverse().map(n=>
-        `<div class="session-note-item"><span>${esc(n.text)}${n.rating?' &nbsp;'+starsHtml(n.rating):''}</span><span class="note-time">${n.time}</span></div>`
-      ).join('');
-    } else {
-      wrap.style.display = 'none';
-    }
-    document.getElementById('note-sheet').style.display = 'flex';
-  }
-
-  function starsHtml(r) {
-    return [1,2,3,4,5].map(i=> i<=r ? '&#9733;' : '&#9734;').join('');
-  }
-
-  function setRating(r) {
-    pendingRating = r;
-    renderRatingPicker();
-  }
-
-  function renderRatingPicker() {
-    const labels = ['','Poor','Fair','Good','Great','Excellent'];
-    document.querySelectorAll('#rating-picker .rating-star').forEach((btn,i)=>{
-      btn.classList.toggle('lit', i < pendingRating);
-    });
-    document.getElementById('rating-label').textContent = pendingRating ? labels[pendingRating] : 'Tap to rate';
-  }
-
-  function saveNote() {
-    const s = students.find(x=>x.id===noteTargetId);
-    if(!s) return;
-    const text = document.getElementById('note-input').value.trim();
-    if(!text && pendingRating === 0) { close('note-sheet'); return; }
-    if(!s.sessionNotes) s.sessionNotes = [];
-    const now = new Date();
-    const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-    if(text || pendingRating) {
-      s.sessionNotes.push({ text: text || '(rating only)', rating: pendingRating, time });
-    }
-    if(pendingRating > 0) s.rating = pendingRating;
-    close('note-sheet');
-    render();
-  }
-
-  function quickRate(id, r) {
-    const s = students.find(x=>x.id===id);
-    if(s) { s.rating = s.rating === r ? 0 : r; render(); }
-  }
-
-  function close(id) { document.getElementById(id).style.display='none'; }
-
-
-  function closeIfOverlay(e, id) {
-    if(e.target===document.getElementById(id)) close(id);
-  }
+  let tt=null;
+  function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';if(tt)clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',2500);}
 
   render();
 </script>
